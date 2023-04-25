@@ -1,5 +1,118 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+
+
+<script>
+  let center = {
+    init:function () {
+      this.getdata1();
+      this.getdata2();
+    },
+    getdata1 : function (){
+      $.ajax({
+        url: '/chart0302',
+        success : function(result){
+          center.display1(result);
+        }
+      });
+    },
+
+    getdata2 : function (){
+      $.ajax({
+        url: '/chart0301',
+        success : function(result){
+          center.display2(result);
+        }
+      });
+    },
+
+    display1 : function (result){
+      Highcharts.chart('container', {
+        chart: {
+          type: 'column'
+        },
+        title: {
+          text: ''
+        },
+        subtitle: {
+          text: ''
+        },
+        xAxis: {
+          type: 'category',
+          labels: {
+            rotation: -45,
+            style: {
+              fontSize: '13px',
+              fontFamily: 'Verdana, sans-serif'
+            }
+          }
+        },
+        yAxis: {
+          min: 0,
+          title: {
+            text: 'Population (millions)'
+          }
+        },
+        legend: {
+          enabled: false
+        },
+        tooltip: {
+          pointFormat: 'Population in 2021: <b>{point.y:.1f} millions</b>'
+        },
+        series: [{
+          name: 'Population',
+          data: result,
+          dataLabels: {
+            enabled: true,
+            rotation: -90,
+            color: '#FFFFFF',
+            align: 'right',
+            format: '{point.y:.1f}', // one decimal
+            y: 10, // 10 pixels down from the top
+            style: {
+              fontSize: '13px',
+              fontFamily: 'Verdana, sans-serif'
+            }
+          }
+        }]
+      });
+    },
+
+    display2 : function (result){
+      Highcharts.chart('container2', {
+        chart: {
+          type: 'pie',
+          options3d: {
+            enabled: true,
+            alpha: 45
+          }
+        },
+        title: {
+          text: '',
+          align: 'left'
+        },
+        subtitle: {
+
+        },
+        plotOptions: {
+          pie: {
+            innerSize: 100,
+            depth: 45
+          }
+        },
+        series: [{
+          name: 'Medals',
+          data: result
+        }]
+      });
+    }
+    };
+
+  $(function (){
+    center.init();
+  })
+</script>
+
 <!-- Begin Page Content -->
 <div class="container-fluid">
   <!-- Page Heading -->
@@ -104,9 +217,8 @@
     <div class="col-xl-8 col-lg-7">
       <div class="card shadow mb-4">
         <!-- Card Header - Dropdown -->
-        <div
-                class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-          <h6 class="m-0 font-weight-bold text-primary">Earnings Overview</h6>
+        <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+          <h6 class="m-0 font-weight-bold text-primary">World's largest cities per 2021</h6>
           <div class="dropdown no-arrow">
             <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -124,9 +236,7 @@
         </div>
         <!-- Card Body -->
         <div class="card-body">
-          <div class="chart-area">
-            <canvas id="myAreaChart"></canvas>
-          </div>
+          <div class="chart-area" id="container"></div>
         </div>
       </div>
     </div>
@@ -137,7 +247,7 @@
         <!-- Card Header - Dropdown -->
         <div
                 class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-          <h6 class="m-0 font-weight-bold text-primary">Revenue Sources</h6>
+          <h6 class="m-0 font-weight-bold text-primary">Beijing 2022 gold medals by country</h6>
           <div class="dropdown no-arrow">
             <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -155,9 +265,7 @@
         </div>
         <!-- Card Body -->
         <div class="card-body">
-          <div class="chart-pie pt-4 pb-2">
-            <canvas id="myPieChart"></canvas>
-          </div>
+          <div class="chart-pie pt-4 pb-2" id="container2"></div>
           <div class="mt-4 text-center small">
                                         <span class="mr-2">
                                             <i class="fas fa-circle text-primary"></i> Direct
